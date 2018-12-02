@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class TankHealth : MonoBehaviour {
     public static int tankHealth = 450;
@@ -39,6 +40,8 @@ public class TankHealth : MonoBehaviour {
             tanknav.SetDestination(Tank.transform.position);
             tanknav.nextPosition = Tank.transform.position;
             Destroy(Tank,1.5f);
+
+			SceneManager.LoadScene ("MainMenu");
         }
 	}
 }

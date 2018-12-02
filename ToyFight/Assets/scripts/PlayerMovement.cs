@@ -23,6 +23,10 @@ public class PlayerMovement : MonoBehaviour {
 	private Vector3 jump;
 	private Rigidbody thisRigidbody;
 
+	private bool mainPos = true;
+
+	private float y = 5.0f;
+
 
 	// Use this for initialization
 	void Start () {
@@ -36,11 +40,35 @@ public class PlayerMovement : MonoBehaviour {
 	void Update () {
 		float x = Input.GetAxis ("Horizontal") * Time.deltaTime * speed_scale;
 
-		transform.Translate (0, 0, x);
+		if (mainPos) {
+			transform.Translate (0, 0, x);
+			Shoot (y);
+		} else {
+			transform.Translate (0, 0, -x);
+			Shoot (-y);
+		}
+
+
+		if (Input.GetKey(KeyCode.A)) {
+			if (mainPos) {
+				mainPos = false;
+				transform.Rotate (new Vector3(0f, 180f, 0f));
+
+			}
+			//transform.Translate (0, 0, -x);
+		}
+
+		if(Input.GetKeyDown(KeyCode.D))
+		{
+			if (!mainPos) {
+				mainPos = true;
+				transform.Rotate (new Vector3(0f, 180f, 0f));
+			}
+
+		}
 
 		Jump();
 		DoubleJump ();
-		Shoot ();
 		getDown ();
 
 
@@ -118,14 +146,16 @@ public class PlayerMovement : MonoBehaviour {
 
 
 	//Shooting with a delay
-	public void Shoot()
-	{
+	public void Shoot(float y)
+	{		
+		
+
 		if (Input.GetKeyDown (KeyCode.Space) && Time.time > nextFire) {
 			nextFire = Time.time + fireRate;
 
 			GameObject bulletInstance = Instantiate (bullet, bulletSpawn.position, bullet.transform.rotation);
 
-			bulletInstance.GetComponent<Rigidbody>().AddForce(new Vector3 (5f, 0f,0f) * bullet_scale, ForceMode.Acceleration);
+			bulletInstance.GetComponent<Rigidbody>().AddForce(new Vector3 (y, 0f,0f) * bullet_scale, ForceMode.Acceleration);
 
 			Destroy (bulletInstance, atTime);
 		}
