@@ -27,7 +27,10 @@ public class PlayerHealth : MonoBehaviour {
 	
 	}
 
-
+    public int GetHealth()
+    {
+        return health;
+    }
 
 	public void DamageTaken(int damage)
 	{

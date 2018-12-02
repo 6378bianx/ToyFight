@@ -4,27 +4,38 @@ using UnityEngine;
 
 public class BearBoss : MonoBehaviour {
 
-    public Transform beam;
+    public GameObject rainbow;
+    public GameObject beam;
+    public Transform rainbow_location;
     public float jumpVelocity;
     public float push_player;
     public float bear_rush;
     public float movement_speed;
+    public int bear_health;
+    public float attack_countdown;
+    public PlayerHealth playerHealth;
 
     private GameObject player;
+    private ParticleSystem beamPS;
     private Vector3 patrol_1;
     private Vector3 patrol_2;
     private Vector3 currentMovement;
     public bool stop_patrol;
     public bool stop_movement;
     public bool attack_activated;
+    public bool attack_inProgress;
     public bool beam_activated;
+    public bool rainbow_activated;
+    public bool timer_active;
     private const string PLAYER = "Player";
     private const string PLATFORM = "Platform";
     private const int EPSILON = 1;
 
+
     // Use this for initialization
     void Start() {
         player = GameObject.FindGameObjectWithTag(PLAYER);
+        beamPS = beam.GetComponent<ParticleSystem>();
         patrol_1 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         patrol_2 = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
         currentMovement = patrol_2;
@@ -32,19 +43,26 @@ public class BearBoss : MonoBehaviour {
         stop_movement = true;
         attack_activated = false;
         beam_activated = false;
+        rainbow_activated = false;
+        attack_inProgress = false;
+        timer_active = true;
+        beamPS.Stop();
+        bear_health = 100;
     }
 
     // Update is called once per frame
     void Update() {
         MoveTowardPlayer();
         Patrol();
-        CareBearBeam();
+        SelectAttack();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        
+        CareBearBeam();
+        Rainbow();
     }
+
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -66,6 +84,10 @@ public class BearBoss : MonoBehaviour {
                 player.GetComponent<Rigidbody>().velocity = Vector3.left * push_player;
                 GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
             }
+        }
+        if(collision.gameObject.name == "bullet(Clone)")
+        {
+            bear_health -= playerHealth.getAttack();
         }
     }
 
@@ -145,13 +167,77 @@ public class BearBoss : MonoBehaviour {
         }
     }
 
+    private void SelectAttack()
+    {
+        if (timer_active)
+        {
+            attack_countdown++;
+        }
+
+        if (attack_countdown % 360 == 0)
+        {
+            beam_activated = true;
+        }
+        if (attack_countdown % 800 == 0)
+        {
+            rainbow_activated = true;
+        }
+    }
+
+    private void Rainbow()
+    {
+        if (rainbow_activated && !attack_inProgress)
+        {
+            Debug.Log("Can i see this");
+            transform.LookAt(GameObject.FindWithTag("MainCamera").transform);
+            StartCoroutine(_Rainbow());
+        }
+    }
+
+    IEnumerator _Rainbow()
+    {
+        attack_inProgress = true;
+        stop_movement = true;
+        stop_patrol = true;
+        timer_active = false;
+        GetComponent<Rigidbody>().useGravity = false;
+        transform.position = rainbow_location.position;
+        rainbow.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        rainbow.SetActive(false);
+        GetComponent<Rigidbody>().useGravity = true;
+        stop_patrol = false;
+        timer_active = true;
+        attack_inProgress = false;
+
+
+    }
+
     private void CareBearBeam()
     {
-        beam_activated = true;
-        if (beam_activated)
+        if (beam_activated && !attack_inProgress)
         {
-            beam.LookAt(player.transform);
+            //Debug.Log("Can i see this");
+            beam.transform.LookAt(player.transform);
+            StartCoroutine(Beam());
         }
+    }
+
+    IEnumerator Beam()
+    {
+        timer_active = false;
+        stop_patrol = true;
+        attack_inProgress = true;
+        beam.SetActive(true);
+        beamPS.Play();
+        yield return new WaitForSeconds(3f);
+        beamPS.Stop();
+        beam.SetActive(false);
+        beam_activated = false;
+        attack_inProgress = false;
+        timer_active = true;
+        stop_patrol = false;
+
     }
 
     private bool IsGrounded()

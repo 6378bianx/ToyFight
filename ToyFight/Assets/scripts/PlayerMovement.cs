@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour {
 	public float speed_scale;
 	public float bullet_scale;
 	public float jump_scale;
+    public PlayerHealth playerHealth;
 
 	public Transform bulletSpawn;
 	public GameObject bullet;
@@ -93,9 +94,22 @@ public class PlayerMovement : MonoBehaviour {
 			
 
 			}
+        if(col.gameObject.name == "Rainbow")
+        {
+            playerHealth.DamageTaken(100);
+        }
 	}
 
-	public void OnCollisionExit(Collision col)
+    private void OnParticleCollision(GameObject other)
+    {
+        if (other.tag == "Beam")
+        {
+            playerHealth.DamageTaken(1);
+            Debug.Log("Current Health: " + playerHealth.GetHealth());
+        }
+    }
+
+    public void OnCollisionExit(Collision col)
 	{
 		if (col.gameObject.tag == "jumpable") {
 			canJump = false;
