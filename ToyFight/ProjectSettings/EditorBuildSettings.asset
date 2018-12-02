@@ -11,3 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/BossMenu.unity
     guid: 5cb49e67ef229e0439b636c0db830ff3
+  - enabled: 1
+    path: Assets/BearBoss.unity
+    guid: a91b3d6c789133341ae9503b07b8fc7b
