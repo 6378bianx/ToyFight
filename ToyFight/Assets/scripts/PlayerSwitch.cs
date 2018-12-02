@@ -4,27 +4,35 @@ using UnityEngine;
 
 public class PlayerSwitch : MonoBehaviour {
 
-	private int[] counterArray = {0,0,0,0,0,0,0,0,0}; 
 
-	private bool ScarificeArm = false;
-	private bool ScarificeEye = false;
-	private bool ScarificeLeg = false;
+	static private int[] counterArray = {0,0,0,0,0,0,0,0,0}; 
 
-	private bool hasTankArm = false;
-	private bool hasTankEye = false;
-	private bool hasTankLeg = false;
+	static private string nextBoss;
 
-	private bool hasBearArm = false;
-	private bool hasBearEye = false;
-	private bool hasBearLeg = false;
+	static private bool ScarificeArm = false;
+	static private bool ScarificeEye = false;
+	static private bool ScarificeLeg = false;
 
-	private bool hasJackArm = false;
-	private bool hasJackEye = false;
-	private bool hasJackLeg = false;
+	static private bool hasTankArm = false;
+	static private bool hasTankEye = false;
+	static private bool hasTankLeg = false;
 
-	private PlayerMovement player;
+	static private bool hasBearArm = false;
+	static private bool hasBearEye = false;
+	static private bool hasBearLeg = false;
 
-	public void ifScarificeArm(bool answer)
+	static private bool hasJackArm = false;
+	static private bool hasJackEye = false;
+	static private bool hasJackLeg = false;
+
+	static private PlayerMovement player;
+
+	public void setNextBoss(string Boss)
+	{
+		nextBoss = Boss;
+	}
+
+	static public void ifScarificeArm(bool answer)
 	{
 		if (answer) {
 			if (hasTankArm == true) {
@@ -59,7 +67,7 @@ public class PlayerSwitch : MonoBehaviour {
 			
 	}
 
-	public void ifScarificeEye(bool answer)
+	static public void ifScarificeEye(bool answer)
 	{
 		if (answer) {
 			if (hasTankEye == true) {
@@ -95,7 +103,7 @@ public class PlayerSwitch : MonoBehaviour {
 	}
 
 
-	public void ifScarificeLeg(bool answer)
+	static public void ifScarificeLeg(bool answer)
 	{
 		if (answer) {
 			if (hasTankLeg == true) {
@@ -134,6 +142,15 @@ public class PlayerSwitch : MonoBehaviour {
 
 
 
+	//FIX IF THERE IS TIME 
+	static public void switchTankArm()
+	{
+		if (hasTankArm == true) {
+			hasTankArm = false;
+		} else {
+			hasTankArm = true;
+		}
+	}
 
 
 
