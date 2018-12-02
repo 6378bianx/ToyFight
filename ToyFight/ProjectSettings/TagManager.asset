@@ -6,6 +6,10 @@ TagManager:
   tags:
   - jumpable
   - enemyBody
+  - invisibleWall
+  - playerBullet
+  - tankFloat
+  - we'llbangokay
   layers:
   - Default
   - TransparentFX
