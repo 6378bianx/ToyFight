@@ -8,6 +8,9 @@ TagManager:
   - we'llbangokay
   - tankFloat
   - jumpable
+  - Bear
+  - Beam
+  - Rainbow
   layers:
   - Default
   - TransparentFX

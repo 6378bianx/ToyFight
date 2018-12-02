@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BearBoss : MonoBehaviour {
 
@@ -47,7 +48,7 @@ public class BearBoss : MonoBehaviour {
         attack_inProgress = false;
         timer_active = true;
         beamPS.Stop();
-        bear_health = 100;
+        bear_health = 10;
     }
 
     // Update is called once per frame
@@ -55,6 +56,20 @@ public class BearBoss : MonoBehaviour {
         MoveTowardPlayer();
         Patrol();
         SelectAttack();
+        if (IsBearDead())
+        {
+            StartCoroutine(BearDies());
+        }
+    }
+
+    IEnumerator BearDies()
+    {
+        stop_movement = true;
+        stop_patrol = true;
+        timer_active = false;
+        yield return new WaitForSeconds(1.5f);
+        Destroy(this.gameObject);
+        SceneManager.LoadScene("MainMenu");
     }
 
     private void FixedUpdate()
@@ -63,6 +78,12 @@ public class BearBoss : MonoBehaviour {
         Rainbow();
     }
 
+    private bool IsBearDead()
+    {
+        bool statement = false;
+        if (bear_health <= 0) statement = true;
+        return statement;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -189,7 +210,7 @@ public class BearBoss : MonoBehaviour {
         if (rainbow_activated && !attack_inProgress)
         {
             Debug.Log("Can i see this");
-            transform.LookAt(GameObject.FindWithTag("MainCamera").transform);
+            transform.LookAt(new Vector3(GameObject.FindWithTag("MainCamera").transform.position.x, transform.position.y, GameObject.FindWithTag("MainCamera").transform.position.z));
             StartCoroutine(_Rainbow());
         }
     }
@@ -205,12 +226,11 @@ public class BearBoss : MonoBehaviour {
         rainbow.SetActive(true);
         yield return new WaitForSeconds(3f);
         rainbow.SetActive(false);
+        rainbow_activated = false;
         GetComponent<Rigidbody>().useGravity = true;
         stop_patrol = false;
         timer_active = true;
         attack_inProgress = false;
-
-
     }
 
     private void CareBearBeam()
