@@ -16,6 +16,8 @@ public class BearBoss : MonoBehaviour {
     public float attack_countdown;
     public PlayerHealth playerHealth;
 
+	private int bearDamage = 10;
+
     private GameObject player;
     private ParticleSystem beamPS;
     private Vector3 patrol_1;
@@ -48,7 +50,7 @@ public class BearBoss : MonoBehaviour {
         attack_inProgress = false;
         timer_active = true;
         beamPS.Stop();
-        bear_health = 10;
+        bear_health = 500;
     }
 
     // Update is called once per frame
@@ -61,6 +63,11 @@ public class BearBoss : MonoBehaviour {
             StartCoroutine(BearDies());
         }
     }
+
+	public int getDamage()
+	{
+		return bearDamage;
+	}
 
     IEnumerator BearDies()
     {

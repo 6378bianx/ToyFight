@@ -8,8 +8,11 @@ public class TankHealth : MonoBehaviour {
     public static int tankHealth = 450;
     public PlayerHealth player;
 	// Use this for initialization
+
+	private int tankDamage = 10;
+
 	void Start () {
-		
+		tankHealth = 450;
 	}
 
     public void OnCollisionEnter(Collision collision)
@@ -43,5 +46,10 @@ public class TankHealth : MonoBehaviour {
 
 			SceneManager.LoadScene ("MainMenu");
         }
+	}
+
+	public int getDamage()
+	{
+		return tankDamage;
 	}
 }

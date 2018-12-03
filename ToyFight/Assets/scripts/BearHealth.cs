@@ -6,7 +6,7 @@ public class BearHealth : MonoBehaviour {
 
     public PlayerHealth player;
     public int bear_health;
-    public int bear_damage;
+    private int bear_damage = 10;
 
 	// Use this for initialization
 	void Start () {
@@ -18,5 +18,10 @@ public class BearHealth : MonoBehaviour {
 		
 	}
 
+
+	public int getDamage()
+	{
+		return bear_damage;
+	}
     
 }
